@@ -9,6 +9,7 @@ from tabulate import tabulate
 
 # DataBase Class will handle all interactions with the database
 # All SQL code should be written here
+# If database fails to connect it will raise an exception that should be handled in the class that called it
 class DataBase:
     connector = None
     cursor = None
@@ -35,9 +36,7 @@ class DataBase:
                 m = messagebox.askretrycancel("Lost Connection to Server",
                                               "Failed to connect to remote database. Check your internet connection.")
                 if m is False:
-                    # Known Issue: does not terminate application cleanly
-                    app.destroy()
-                    return
+                    raise Exception("Failed to connect to remote database")
 
                 time.sleep(1)
 
@@ -46,7 +45,10 @@ class DataBase:
     #
     def search_customer(self, data):
         # all functions re-connect to prevent timeout
-        self.connect()
+        try:
+            self.connect()
+        except Exception as e:
+            raise e
         result = None
         i = data[0]
         # if given id
@@ -443,10 +445,13 @@ class AddCustomerPopup(tk.Toplevel):
 
     def apply(self):
         if self.f_name.get() is not "" and self.l_name.get() is not "" and self.phone.get() is not "":
-            db = DataBase()
-            customer_data = (self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
-                             self.state.get())
-            db.add_customer(customer_data)
+            try:
+                db = DataBase()
+                customer_data = (self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
+                                 self.state.get())
+                db.add_customer(customer_data)
+            except:
+                pass
         else:
             messagebox.showerror("Error", "Customer must have a first name, last name and phone number.")
 
@@ -473,29 +478,32 @@ class CustomerSearchPanel(tk.Frame):
         self.s.config(command=self.t.yview)
         self.t.config(yscrollcommand=self.s.set)
         # search database insert string into scrollbar
-        # print(self.search(db, f, l, x))
         self.t.insert(tk.INSERT, self.search(f, l, x))
         self.t.configure(state='disabled')
 
     # return string of search results
     def search(self, f, l, i):
-        db = DataBase()
-        self.result = db.search_customer((i, f, l))
-        # if only one customer found display detailed view
-        if self.result.__len__() == 1:
-            CustomerDetailPopup(self.master.master, self.result)
-            # update result in case of change
-            self.result = db.search_customer((self.result[0][0], "", ""))
-            # if customer was deleted result = all customers
-            if self.result.__len__() == 0:
-                self.result = db.search_customer(("", "", ""))
-                self.master.clear_lookup_entry()
-        # only display first 6 columns
-        for i in range(0, self.result.__len__()):
-            self.result[i] = self.result[i][:7]
-        s = tabulate(self.result,
-                     headers=["ID", "First Name", "Last Name", "Phone", "Street", "City", "State"],
-                     tablefmt="simple")
+        s = ""
+        try:
+            db = DataBase()
+            self.result = db.search_customer((i, f, l))
+            # if only one customer found display detailed view
+            if self.result.__len__() == 1:
+                CustomerDetailPopup(self.master.master, self.result)
+                # update result in case of change
+                self.result = db.search_customer((self.result[0][0], "", ""))
+                # if customer was deleted result = all customers
+                if self.result.__len__() == 0:
+                    self.result = db.search_customer(("", "", ""))
+                    self.master.clear_lookup_entry()
+            # only display first 6 columns
+            for i in range(0, self.result.__len__()):
+                self.result[i] = self.result[i][:7]
+            s = tabulate(self.result,
+                         headers=["ID", "First Name", "Last Name", "Phone", "Street", "City", "State"],
+                         tablefmt="simple")
+        except Exception as e:
+            s = e
         return s
 
 
@@ -622,8 +630,11 @@ class CustomerDetailPopup(tk.Toplevel):
                 self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
                 self.state.get(),
                 self.customer[0][0])
-            db = DataBase()
-            db.update_customer(usr_entry)
+            try:
+                db = DataBase()
+                db.update_customer(usr_entry)
+            except:
+                pass
             self.parent.focus_set()
             self.destroy()
 
@@ -644,8 +655,11 @@ class CustomerDetailPopup(tk.Toplevel):
                                             "Are you sure you want to remove this customer? \n\nThis action cannot be undone.\n",
                                             icon='warning')
         if msg_box == 'yes':
-            db = DataBase()
-            db.remove_customer(self.customer[0][0])
+            try:
+                db = DataBase()
+                db.remove_customer(self.customer[0][0])
+            except:
+                pass
             self.cancel()
 
 

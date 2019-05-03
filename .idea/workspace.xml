@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5c7401e1-da6f-4a0c-9f42-2f18442c8aa1" name="Default Changelist" comment="">
+    <list default="true" id="5c7401e1-da6f-4a0c-9f42-2f18442c8aa1" name="Default Changelist" comment="added get and add functionality for services and slips">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,10 +31,30 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-980">
-              <caret line="207" selection-start-line="207" selection-end-line="207" />
+            <state relative-caret-position="150">
+              <caret line="10" column="37" lean-forward="true" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
+                <element signature="e#2102#3822#0" />
+                <element signature="e#2117#3614#0" />
+                <element signature="e#3674#3833#0" />
+                <element signature="e#3887#4039#0" />
+                <element signature="e#4101#6881#0" />
+                <element signature="e#6925#10677#0" />
+                <element signature="e#14150#15729#0" />
+                <element signature="e#19061#19098#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -51,8 +73,8 @@
     <findStrings>
       <find>intvar</find>
       <find>curs</find>
-      <find>db</find>
       <find>self.db</find>
+      <find>db</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -64,8 +86,8 @@
       <list>
         <option value="$PROJECT_DIR$/MainWindow.py" />
         <option value="$PROJECT_DIR$/__init__.py" />
-        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/TODO:" />
+        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -88,17 +110,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="MarinaSystem" type="b2602c69:ProjectViewProjectNode" />
-              <item name="MarinaSystem" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -110,6 +121,17 @@
               <item name="MarinaSystem" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/Documents/GitHub/MarinaSystem" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name=".idea" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="MarinaSystem" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MarinaSystem" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -324,15 +346,15 @@
     <option name="totallyTimeSpent" value="4665000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1455" height="935" extended-state="6" />
+    <frame x="-1" y="23" width="1920" height="1134" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48228884" visible="true" weight="0.14164905" />
-      <window_info id="Structure" order="1" sideWeight="0.51771116" side_tool="true" visible="true" weight="0.14164905" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48333332" visible="true" weight="0.1421801" />
+      <window_info active="true" id="Structure" order="1" sideWeight="0.51666665" side_tool="true" visible="true" weight="0.1421801" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49964765" weight="0.17228916" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49541932" visible="true" weight="0.087064676" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49541932" visible="true" weight="0.07869482" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -431,17 +453,28 @@
     <entry file="file://$PROJECT_DIR$/TODO:" />
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        <state relative-caret-position="105">
+          <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-980">
-          <caret line="207" selection-start-line="207" selection-end-line="207" />
+        <state relative-caret-position="150">
+          <caret line="10" column="37" lean-forward="true" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
+            <element signature="e#2102#3822#0" />
+            <element signature="e#2117#3614#0" />
+            <element signature="e#3674#3833#0" />
+            <element signature="e#3887#4039#0" />
+            <element signature="e#4101#6881#0" />
+            <element signature="e#6925#10677#0" />
+            <element signature="e#14150#15729#0" />
+            <element signature="e#19061#19098#0" />
           </folding>
         </state>
       </provider>

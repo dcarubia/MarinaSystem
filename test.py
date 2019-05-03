@@ -5,9 +5,10 @@ db = DataBase()
 result = db.search_customer(("", "", "b"))
 print(result)
 
+'''
 
 #method for inserting excel file for testing
-  def insert_file(file, sheet)
+  def insert_file(file, sheet):
       #file is file name of workbook, sheet is sheet name
       workbook = xlrd.open_workbook(fil, on_demand = Truee)
       #create excel obj
@@ -34,7 +35,8 @@ print(result)
         break 
       
       x += 1
-        
+      
+'''
 
     
       
