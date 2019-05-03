@@ -121,6 +121,69 @@ class DataBase:
         self.connector.commit()
         self.cursor.close()
 
+        #
+        #   Retrieves all available and non-available slips
+        #
+    def get_slip(self, data):
+        # Re-establish connection
+        self.connect()
+        # SQL to retrieve data from slip table
+        sql = "SELECT * FROM slip"
+        # Execute SQL
+        self.cursor.execute(sql, data)
+        result = self.cursor.fetchall()
+        # Commit data manipulation to database
+        self.connector.commit()
+        self.cursor.close()
+        return result
+
+    #
+    #   Add boat slip
+    #
+    def add_slip(self, data):
+        # Re-establish connection
+        self.connect()
+        # SQL to add slip
+        add_slip = ("INSERT INTO slip "
+                    "(current_lease, max_length, dock_id, customer_id) "
+                    "VALUES (%s, %s, %d, %d)")
+        # Execute - Insert new slip
+        self.cursor.execute(add_slip, data)
+        # Make sure data is committed to the database
+        self.connector.commit()
+        self.cursor.close()
+
+    #
+    #   Add service to the schedule
+    #
+
+    def add_service(self, data):
+        # Re-establish connection
+        self.connect()
+        # SQL to add service
+        add_service = ("INSERT INTO service "
+                       "(boat_id, service")
+        # Execute SQL
+        self.cursor.execute(add_service, data)
+        # Make sure data is committed to the database
+        self.connector.commit()
+        self.cursor.close()
+
+        #
+        #   Retrieves schedule of services
+        #
+
+    def get_services(self, data):
+        # Re-establish connection
+        self.connect()
+        # SQL to retrieve services
+        get_services = ("SELECT * FROM service")
+        # Execute SQL
+        self.cursor.execute(get_services, data)
+        # Make sure data is committed to the database
+        self.connector.commit()
+        self.cursor.close()
+
     #
     #   @ param: data: list of values
     #   @ return: same list with all values trimmed
