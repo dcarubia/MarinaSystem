@@ -49,111 +49,132 @@ class DataBase:
             self.connect()
         except Exception as e:
             raise e
-        result = None
-        i = data[0]
-        # if given id
-        if i is not "":
-            # SQL to search customer using id
-            sql = "SELECT * FROM customer WHERE customer_id = %s"
-            # Execute
-            self.cursor.execute(sql, (i,))
-            result = self.cursor.fetchall()
-            # Make sure data is committed to the database
-            self.connector.commit()
-            self.cursor.close()
         else:
-            f = data[1]
-            l = data[2]
-            # SQL to search customer using names
-            sql = "SELECT * FROM customer WHERE first_name LIKE %s AND last_name LIKE %s ORDER BY last_name ASC"
-            usr_entry = (f + "%", l + "%")
-            # Execute
-            self.cursor.execute(sql, usr_entry)
-            result = self.cursor.fetchall()
-            # Make sure data is committed to the database
-            self.connector.commit()
-            self.cursor.close()
-        return result
+            result = None
+            i = data[0]
+            # if given id
+            if i is not "":
+                # SQL to search customer using id
+                sql = "SELECT * FROM customer WHERE customer_id = %s"
+                # Execute
+                self.cursor.execute(sql, (i,))
+                result = self.cursor.fetchall()
+                # Make sure data is committed to the database
+                self.connector.commit()
+                self.cursor.close()
+            else:
+                f = data[1]
+                l = data[2]
+                # SQL to search customer using names
+                sql = "SELECT * FROM customer WHERE first_name LIKE %s AND last_name LIKE %s ORDER BY last_name ASC"
+                usr_entry = (f + "%", l + "%")
+                # Execute
+                self.cursor.execute(sql, usr_entry)
+                result = self.cursor.fetchall()
+                # Make sure data is committed to the database
+                self.connector.commit()
+                self.cursor.close()
+            return result
 
     #
     #   @param: data: list containing f_name, l_name, phone, street, city, state
     #
     def add_customer(self, data):
         # all functions re-connect to prevent timeout
-        self.connect()
-        # trim input data
-        data = self.trim_data(data)
-        # SQL to add customer
-        add_customer = ("INSERT INTO customer "
-                        "(first_name, last_name, phone, street, city, state) "
-                        "VALUES (%s, %s, %s, %s, %s, %s)")
-        # Execute - Insert new employee
-        self.cursor.execute(add_customer, data)
-        # Make sure data is committed to the database
-        self.connector.commit()
-        self.cursor.close()
+        try:
+            self.connect()
+        except Exception as e:
+            raise e
+        else:
+            # trim input data
+            data = self.trim_data(data)
+            # SQL to add customer
+            add_customer = ("INSERT INTO customer "
+                            "(first_name, last_name, phone, street, city, state) "
+                            "VALUES (%s, %s, %s, %s, %s, %s)")
+            # Execute - Insert new employee
+            self.cursor.execute(add_customer, data)
+            # Make sure data is committed to the database
+            self.connector.commit()
+            self.cursor.close()
 
     #
     #   @param: id: customer_id to delete
     #
     def remove_customer(self, id):
         # all functions re-connect to prevent timeout
-        self.connect()
-        # SQL to remove customer
-        sql = "DELETE FROM customer WHERE customer_id = %s"
-        # Execute
-        self.cursor.execute(sql, (id,))
-        # Make sure data is committed to the database
-        self.connector.commit()
-        self.cursor.close()
+        try:
+            self.connect()
+        except Exception as e:
+            raise e
+        else:
+            # SQL to remove customer
+            sql = "DELETE FROM customer WHERE customer_id = %s"
+            # Execute
+            self.cursor.execute(sql, (id,))
+            # Make sure data is committed to the database
+            self.connector.commit()
+            self.cursor.close()
 
     #
     #   @param: data: list containing f_name, l_name, phone, street, city, state, customer_id to update
     #
     def update_customer(self, data):
         # all functions re-connect to prevent timeout
-        self.connect()
-        # trim data
-        data = self.trim_data(data)
-        # SQL to update customer
-        sql = "UPDATE customer SET first_name = %s, last_name = %s, phone = %s, street = %s, city = %s, state = %s WHERE customer_id = %s"
-        # Execute
-        self.cursor.execute(sql, data)
-        # Make sure data is committed to the database
-        self.connector.commit()
-        self.cursor.close()
+        try:
+            self.connect()
+        except Exception as e:
+            raise e
+        else:
+            # trim data
+            data = self.trim_data(data)
+            # SQL to update customer
+            sql = "UPDATE customer SET first_name = %s, last_name = %s, phone = %s, street = %s, city = %s, state = %s WHERE customer_id = %s"
+            # Execute
+            self.cursor.execute(sql, data)
+            # Make sure data is committed to the database
+            self.connector.commit()
+            self.cursor.close()
 
         #
         #   Retrieves all available and non-available slips
         #
     def get_slip(self, data):
         # Re-establish connection
-        self.connect()
-        # SQL to retrieve data from slip table
-        sql = "SELECT * FROM slip"
-        # Execute SQL
-        self.cursor.execute(sql, data)
-        result = self.cursor.fetchall()
-        # Commit data manipulation to database
-        self.connector.commit()
-        self.cursor.close()
-        return result
+        try:
+            self.connect()
+        except Exception as e:
+            raise e
+        else:
+            # SQL to retrieve data from slip table
+            sql = "SELECT * FROM slip"
+            # Execute SQL
+            self.cursor.execute(sql, data)
+            result = self.cursor.fetchall()
+            # Commit data manipulation to database
+            self.connector.commit()
+            self.cursor.close()
+            return result
 
     #
     #   Add boat slip
     #
     def add_slip(self, data):
         # Re-establish connection
-        self.connect()
-        # SQL to add slip
-        add_slip = ("INSERT INTO slip "
-                    "(current_lease, max_length, dock_id, customer_id) "
-                    "VALUES (%s, %s, %d, %d)")
-        # Execute - Insert new slip
-        self.cursor.execute(add_slip, data)
-        # Make sure data is committed to the database
-        self.connector.commit()
-        self.cursor.close()
+        try:
+            self.connect()
+        except Exception as e:
+            raise e
+        else:
+            # SQL to add slip
+            add_slip = ("INSERT INTO slip "
+                        "(current_lease, max_length, dock_id, customer_id) "
+                        "VALUES (%s, %s, %d, %d)")
+            # Execute - Insert new slip
+            self.cursor.execute(add_slip, data)
+            # Make sure data is committed to the database
+            self.connector.commit()
+            self.cursor.close()
 
     #
     #   Add service to the schedule
@@ -161,15 +182,19 @@ class DataBase:
 
     def add_service(self, data):
         # Re-establish connection
-        self.connect()
-        # SQL to add service
-        add_service = ("INSERT INTO service "
-                       "(boat_id, service")
-        # Execute SQL
-        self.cursor.execute(add_service, data)
-        # Make sure data is committed to the database
-        self.connector.commit()
-        self.cursor.close()
+        try:
+            self.connect()
+        except Exception as e:
+            raise e
+        else:
+            # SQL to add service
+            add_service = ("INSERT INTO service "
+                           "(boat_id, service")
+            # Execute SQL
+            self.cursor.execute(add_service, data)
+            # Make sure data is committed to the database
+            self.connector.commit()
+            self.cursor.close()
 
         #
         #   Retrieves schedule of services
@@ -177,14 +202,18 @@ class DataBase:
 
     def get_services(self, data):
         # Re-establish connection
-        self.connect()
-        # SQL to retrieve services
-        get_services = ("SELECT * FROM service")
-        # Execute SQL
-        self.cursor.execute(get_services, data)
-        # Make sure data is committed to the database
-        self.connector.commit()
-        self.cursor.close()
+        try:
+            self.connect()
+        except Exception as e:
+            raise e
+        else:
+            # SQL to retrieve services
+            get_services = ("SELECT * FROM service")
+            # Execute SQL
+            self.cursor.execute(get_services, data)
+            # Make sure data is committed to the database
+            self.connector.commit()
+            self.cursor.close()
 
     #
     #   @ param: data: list of values
