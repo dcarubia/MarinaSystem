@@ -139,7 +139,7 @@ class DataBase:
         #
         #   Retrieves all available and non-available slips
         #
-    def get_slip(self, data):
+    def get_slip(self):
         # Re-establish connection
         try:
             self.connect()
@@ -149,7 +149,7 @@ class DataBase:
             # SQL to retrieve data from slip table
             sql = "SELECT * FROM slip"
             # Execute SQL
-            self.cursor.execute(sql, data)
+            self.cursor.execute(sql)
             result = self.cursor.fetchall()
             # Commit data manipulation to database
             self.connector.commit()
@@ -200,7 +200,7 @@ class DataBase:
         #   Retrieves schedule of services
         #
 
-    def get_services(self, data):
+    def get_services(self):
         # Re-establish connection
         try:
             self.connect()
@@ -210,10 +210,12 @@ class DataBase:
             # SQL to retrieve services
             get_services = ("SELECT * FROM service")
             # Execute SQL
-            self.cursor.execute(get_services, data)
+            self.cursor.execute(get_services)
+            result = self.cursor.fetchall()
             # Make sure data is committed to the database
             self.connector.commit()
             self.cursor.close()
+        return result
 
     #
     #   @ param: data: list of values
@@ -304,10 +306,35 @@ class MenuFrame(tk.Frame):
 # Not implemented
 #
 class ServicePage(tk.Frame):
+    cur_services = None
+    customer_id = None
+    service_request = None
+    result = None
+    t = None
+    s = None
+
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        tk.Label(self, text="This is the service page").pack(side="top", fill="x", pady=10)
 
+        # Customer ID to add service to
+        tk.Label(self, text="Customer ID: ").grid(row=1, column=0, sticky="w")
+        self.customer_id = tk.Entry(self, width=20)
+        self.customer_id.grid(row=1, column=1)
+
+        # Service to add
+        tk.Label(self, text="Service Request: ").grid(row=2, column=0, sticky="w")
+        self.service_request = tk.Entry(self, width=20)
+        self.service_request.grid(row=2, column=1)
+
+        # initially show all customers
+        self.update_search_panel("", "", "")
+
+    def update_search_panel(self, f, l, id):
+        new_frame = ServicesPanel(self)
+        if self.cur_services is not None:
+            self.cur_services.destroy()
+        self.cur_services = new_frame
+        self.cur_services.grid(row=0, column=2, rowspan=30)
 
 #
 # SlipPage Class
@@ -530,6 +557,40 @@ class CustomerSearchPanel(tk.Frame):
                 self.result[i] = self.result[i][:7]
             s = tabulate(self.result,
                          headers=["ID", "First Name", "Last Name", "Phone", "Street", "City", "State"],
+                         tablefmt="simple")
+        except Exception as e:
+            s = e
+        return s
+
+class ServicesPanel(tk.Frame):
+    s = None
+    t = None
+    result = None
+
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+        self.configure(bg="#e6e6e6")
+        self.s = tk.Scrollbar(self)
+        self.t = tk.Text(self, height=50, width=150, relief="sunken")
+        self.s.pack(side='right', fill='y')
+        self.t.pack(side='left', fill='y')
+        self.s.config(command=self.t.yview)
+        self.t.config(yscrollcommand=self.s.set)
+        # search database insert string into scrollbar
+        self.t.insert(tk.INSERT, self.search())
+        self.t.configure(state='disabled')
+
+    # return string of search results
+    def search(self):
+        s = ""
+        try:
+            db = DataBase()
+            self.result = db.get_services()
+            # if only one customer found display detailed view
+            for i in range(0, self.result.__len__()):
+                self.result[i] = self.result[i][:7]
+            s = tabulate(self.result,
+                         headers=["ID", "Boat", "Start Date", "End Date", "Service Type"],
                          tablefmt="simple")
         except Exception as e:
             s = e
