@@ -401,7 +401,7 @@ class SlipPage(tk.Frame):
 
 #
 # CustomerPage Class
-# Holds Lookup Customer entries/buttons and CustomerSearchPanel
+# Holds Customer Lookup entries/buttons and CustomerSearchPanel
 #
 class CustomerPage(tk.Frame):
     cur_search_frame = None
@@ -844,7 +844,7 @@ class CustomerDetailPopup(tk.Toplevel):
             self.cancel()
 
     def add_service(self):
-        AddServicePopup(self.master.master, self.result)
+        AddServicePopup(self.parent, self.result)
 
 
 class AddServicePopup(tk.Toplevel):
@@ -879,11 +879,11 @@ class AddServicePopup(tk.Toplevel):
     #
     # construction hooks
     def body(self, master):
-        tk.Label(self, text="Boat ID: ").grid(row=1, sticky="e")
-        tk.Label(self, text="Services Requested: ").grid(row=2, sticky="e")
+        tk.Label(master, text="Boat ID: ").grid(row=1, sticky="e")
+        tk.Label(master, text="Services Requested: ").grid(row=2, sticky="e")
 
-        self.boat_id = tk.Entry(self, width=15)
-        self.service = tk.Entry(self, width=15)
+        self.boat_id = tk.Entry(master, width=15)
+        self.service = tk.Entry(master, width=15)
 
         self.boat_id.grid(row=1, column=1)
         self.service.grid(row=2, column=1)
