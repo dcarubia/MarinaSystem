@@ -139,6 +139,7 @@ class DataBase:
         #
         #   Retrieves all available and non-available slips
         #
+
     def get_slip(self, customer_id):
         # Re-establish connection
         # Re-establish connection
@@ -360,6 +361,7 @@ class ServicePage(tk.Frame):
     def clear_lookup_entry(self):
         self.boat_id.delete(0, 'end')
 
+
 #
 # SlipPage Class
 #
@@ -556,8 +558,9 @@ class AddCustomerPopup(tk.Toplevel):
         if self.f_name.get() is not "" and self.l_name.get() is not "" and self.phone.get() is not "":
             try:
                 db = DataBase()
-                customer_data = (self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
-                                 self.state.get())
+                customer_data = (
+                self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
+                self.state.get())
                 db.add_customer(customer_data)
             except:
                 pass
@@ -615,6 +618,7 @@ class CustomerSearchPanel(tk.Frame):
             s = e
         return s
 
+
 class ServicesPanel(tk.Frame):
     s = None
     t = None
@@ -624,7 +628,7 @@ class ServicesPanel(tk.Frame):
         tk.Frame.__init__(self, master)
         self.configure(bg="#e6e6e6")
         self.s = tk.Scrollbar(self)
-        self.t = tk.Text(self, height=50, width=150, relief="sunken")
+        self.t = tk.Text(self, height=40, width=150, relief="sunken")
         self.s.pack(side='right', fill='y')
         self.t.pack(side='left', fill='y')
         self.s.config(command=self.t.yview)
@@ -649,6 +653,7 @@ class ServicesPanel(tk.Frame):
             s = e
         return s
 
+
 class SlipPanel(tk.Frame):
     s = None
     t = None
@@ -658,7 +663,7 @@ class SlipPanel(tk.Frame):
         tk.Frame.__init__(self, master)
         self.configure(bg="#e6e6e6")
         self.s = tk.Scrollbar(self)
-        self.t = tk.Text(self, height=50, width=150, relief="sunken")
+        self.t = tk.Text(self, height=40, width=150, relief="sunken")
         self.s.pack(side='right', fill='y')
         self.t.pack(side='left', fill='y')
         self.s.config(command=self.t.yview)
@@ -774,7 +779,7 @@ class CustomerDetailPopup(tk.Toplevel):
         self.close_button = tk.Button(box, text="Close", width=10, command=self.cancel)
         self.close_button.pack(side=tk.LEFT, padx=5, pady=5)
         self.service_button = tk.Button(self, text="Add Service", padx=20,
-                  command=lambda: self.add_service())
+                                        command=lambda: self.add_service())
         self.service_button.pack(side=tk.BOTTOM, padx=5, pady=5)
         self.bind("<Return>", self.cancel)
         self.bind("<Escape>", self.cancel)
@@ -927,22 +932,17 @@ class AddServicePopup(tk.Toplevel):
         return 1  # override
 
     def apply(self):
-        # confirm removal
-        msg_box = tk.messagebox.askquestion("Confirm Update",
-                                            "Are you sure you want to update this customer?\n",
-                                            icon='warning')
-        if msg_box == 'yes':
-            usr_entry = (
-                self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
-                self.state.get(),
-                self.customer[0][0])
-            try:
-                db = DataBase()
-                db.update_customer(usr_entry)
-            except:
-                pass
-            self.parent.focus_set()
-            self.destroy()
+        usr_entry = (
+            self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
+            self.state.get(),
+            self.customer[0][0])
+        try:
+            db = DataBase()
+            db.update_customer(usr_entry)
+        except:
+            pass
+        self.parent.focus_set()
+        self.destroy()
 
     def enable_entries(self):
         self.boat_id.configure(state="normal")
