@@ -7,8 +7,8 @@ import pandas as pd
 
 customer = (r"C:\Users\fusar\PycharmProjects\MarinaSystem\customer.xls")
 slip = (r"C:\Users\fusar\PycharmProjects\MarinaSystem\slip.xls")
+services = slip = (r"C:\Users\fusar\PycharmProjects\MarinaSystem\services.xls")
 db = DataBase()
-
 
 
 # method for inserting excel file for testing
@@ -35,26 +35,45 @@ def insert_customer(file):
 
         db.add_customer(data)
         x += 1
-        #
-    def insert_slip(file):
-        # file is file name of workbook, sheet is sheet name
-        workbook = xlrd.open_workbook(file, on_demand=True)
-        # create excel obj
-        sheet = workbook.sheet_by_index(0)
-        # use add method from main class
-        cust = 1
-        while sheet.cell(cust, 0) != xlrd.empty_cell.value:
-            current_lease = sheet.cell(cust, 0).value
-            if sheet.cell(cust, 1).value != xlrd.empty_cell.value:
-                max_length = sheet.cell(cust, 1).value
-            if sheet.cell(cust, 2).value != xlrd.empty_cell.value:
-                dock_ID = sheet.cell(cust, 2).value
-            data = [current_lease, max_length, dock_ID, cust]
 
-            db.add_slip(data)
-            cust += 1
 
-    insert_slip(slip)
+def insert_slip(file):
+    # file is file name of workbook, sheet is sheet name
+    workbook = xlrd.open_workbook(file, on_demand=True)
+    # create excel obj
+    sheet = workbook.sheet_by_index(0)
+    # use add method from main class
+    cust = 1
+    while sheet.cell(cust, 0) != xlrd.empty_cell.value:
+        current_lease = sheet.cell(cust, 0).value
+        if sheet.cell(cust, 1).value != xlrd.empty_cell.value:
+            max_length = sheet.cell(cust, 1).value
+        if sheet.cell(cust, 2).value != xlrd.empty_cell.value:
+            dock_ID = sheet.cell(cust, 2).value
+        data = [current_lease, max_length, dock_ID, cust]
+
+        db.add_slip(data)
+        cust += 1
+
+def insert_service(file):
+    # file is file name of workbook, sheet is sheet name
+    workbook = xlrd.open_workbook(file, on_demand=True)
+    # create excel obj
+    sheet = workbook.sheet_by_index(0)
+    # use add method from main class
+    x = 1
+    while sheet.cell(x, 0) != xlrd.empty_cell.value:
+        boat_id = sheet.cell(x, 1).value
+        if sheet.cell(x, 4).value != xlrd.empty_cell.value:
+            service = sheet.cell(x, 3).value
+        data = [boat_id, service]
+
+        db.add_service(data)
+        x += 1
+
+
+insert_service(services)
+    #insert_slip(slip)
     # insert_customer(customer)
 
 
