@@ -18,8 +18,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="284">
-                  <caret line="326" column="50" lean-forward="true" selection-start-line="326" selection-start-column="50" selection-end-line="326" selection-end-column="50" />
+                <state relative-caret-position="213">
+                  <caret line="214" column="48" selection-start-line="214" selection-start-column="48" selection-end-line="214" selection-end-column="48" />
                   <folding>
                     <element signature="e#0#20#0" expanded="true" />
                   </folding>
@@ -34,8 +34,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="77">
-                  <caret line="357" lean-forward="true" selection-start-line="357" selection-end-line="357" />
+                <state relative-caret-position="320">
+                  <caret line="72" column="25" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
                   <folding>
                     <element signature="e#0#20#0" expanded="true" />
                   </folding>
@@ -51,6 +51,15 @@
     <findStrings>
       <find>tabu</find>
       <find>tabulate</find>
+      <find>detail</find>
+      <find>Services</find>
+      <find>Service Req</find>
+      <find>cur_service</find>
+      <find>CustomerSearchPanel</find>
+      <find>search_customer</find>
+      <find>initially</find>
+      <find>ServicesPanel</find>
+      <find>get_services</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -64,7 +73,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="213" />
+    <option name="x" value="298" />
+    <option name="y" value="52" />
     <option name="width" value="1500" />
     <option name="height" value="1000" />
   </component>
@@ -145,10 +155,25 @@
       <option name="presentableId" value="Default" />
       <updated>1557008770294</updated>
     </task>
+    <task id="LOCAL-00001" summary="added retrieve services functionality on service page.&#10;added display table to service page.">
+      <created>1557096155998</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1557096155998</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added &quot;add service&quot; button to customer popup.&#10;added AddServicePopup window but needs work on functionality">
+      <created>1557151704033</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1557151704033</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="213" y="0" width="1500" height="1000" extended-state="0" />
+    <frame x="298" y="52" width="1500" height="1000" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.23255815" />
@@ -170,6 +195,11 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added retrieve services functionality on service page.&#10;added display table to service page." />
+    <MESSAGE value="added &quot;add service&quot; button to customer popup.&#10;added AddServicePopup window but needs work on functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="added &quot;add service&quot; button to customer popup.&#10;added AddServicePopup window but needs work on functionality" />
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -185,8 +215,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="326" column="50" lean-forward="true" selection-start-line="326" selection-start-column="50" selection-end-line="326" selection-end-column="50" />
+        <state relative-caret-position="213">
+          <caret line="214" column="48" selection-start-line="214" selection-start-column="48" selection-end-line="214" selection-end-column="48" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>

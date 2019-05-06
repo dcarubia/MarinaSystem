@@ -200,21 +200,31 @@ class DataBase:
         #   Retrieves schedule of services
         #
 
-    def get_services(self):
+    def get_services(self, boat_id):
         # Re-establish connection
         try:
             self.connect()
         except Exception as e:
             raise e
         else:
-            # SQL to retrieve services
-            get_services = ("SELECT * FROM service")
-            # Execute SQL
-            self.cursor.execute(get_services)
-            result = self.cursor.fetchall()
-            # Make sure data is committed to the database
-            self.connector.commit()
-            self.cursor.close()
+            result = None
+            if boat_id is not -1:  # Retrieves specified boat
+                # SQL to retrieve services
+                sql = "SELECT * FROM service WHERE boat_id = %s"
+                # Execute SQL
+                self.cursor.execute(sql, (boat_id,))
+                result = self.cursor.fetchall()
+                # Make sure data is committed to the database
+                self.connector.commit()
+                self.cursor.close()
+            else:  # Retrieves all the services
+                sql = "SELECT * FROM service"
+                # Execute
+                self.cursor.execute(sql)
+                result = self.cursor.fetchall()
+                # Make sure data is committed to the database
+                self.connector.commit()
+                self.cursor.close()
         return result
 
     #
@@ -307,34 +317,38 @@ class MenuFrame(tk.Frame):
 #
 class ServicePage(tk.Frame):
     cur_services = None
-    customer_id = None
-    service_request = None
-    result = None
-    t = None
-    s = None
+    boat_id = None
 
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
         # Customer ID to add service to
-        tk.Label(self, text="Customer ID: ").grid(row=1, column=0, sticky="w")
-        self.customer_id = tk.Entry(self, width=20)
-        self.customer_id.grid(row=1, column=1)
+        tk.Label(self, text="Boat ID: ").grid(row=1, column=0, sticky="w")
+        self.boat_id = tk.Entry(self, width=10)
+        self.boat_id.grid(row=1, column=1)
 
-        # Service to add
-        tk.Label(self, text="Service Request: ").grid(row=2, column=0, sticky="w")
-        self.service_request = tk.Entry(self, width=20)
-        self.service_request.grid(row=2, column=1)
+        # clear button
+        tk.Button(self, text="Clear", padx=20,
+                  command=lambda: self.clear_lookup_entry()).grid(row=2, column=0)
+        # search button
+        self.bind("<Return>",
+                  (lambda event: self.update_search_panel(self.boat_id.get())))
+
+        tk.Button(self, text="Search", padx=20,
+                  command=lambda: self.update_search_panel(self.boat_id.get())).grid(row=2, column=1)
 
         # initially show all customers
-        self.update_search_panel("", "", "")
+        self.update_search_panel(-1)
 
-    def update_search_panel(self, f, l, id):
-        new_frame = ServicesPanel(self)
+    def update_search_panel(self, boat_id):
+        new_frame = ServicesPanel(self, boat_id)
         if self.cur_services is not None:
             self.cur_services.destroy()
         self.cur_services = new_frame
         self.cur_services.grid(row=0, column=2, rowspan=30)
+
+    def clear_lookup_entry(self):
+        self.boat_id.delete(0, 'end')
 
 #
 # SlipPage Class
@@ -567,7 +581,7 @@ class ServicesPanel(tk.Frame):
     t = None
     result = None
 
-    def __init__(self, master):
+    def __init__(self, master, boat_id):
         tk.Frame.__init__(self, master)
         self.configure(bg="#e6e6e6")
         self.s = tk.Scrollbar(self)
@@ -577,18 +591,18 @@ class ServicesPanel(tk.Frame):
         self.s.config(command=self.t.yview)
         self.t.config(yscrollcommand=self.s.set)
         # search database insert string into scrollbar
-        self.t.insert(tk.INSERT, self.search())
+        self.t.insert(tk.INSERT, self.search(boat_id))
         self.t.configure(state='disabled')
 
     # return string of search results
-    def search(self):
+    def search(self, boat_id):
         s = ""
         try:
             db = DataBase()
-            self.result = db.get_services()
+            self.result = db.get_services(boat_id)
             # if only one customer found display detailed view
             for i in range(0, self.result.__len__()):
-                self.result[i] = self.result[i][:7]
+                self.result[i] = self.result[i][:5]
             s = tabulate(self.result,
                          headers=["ID", "Boat", "Start Date", "End Date", "Service Type"],
                          tablefmt="simple")
