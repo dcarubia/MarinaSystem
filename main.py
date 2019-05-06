@@ -139,22 +139,33 @@ class DataBase:
         #
         #   Retrieves all available and non-available slips
         #
-    def get_slip(self):
+    def get_slip(self, customer_id):
+        # Re-establish connection
         # Re-establish connection
         try:
             self.connect()
         except Exception as e:
             raise e
         else:
-            # SQL to retrieve data from slip table
-            sql = "SELECT * FROM slip"
-            # Execute SQL
-            self.cursor.execute(sql)
-            result = self.cursor.fetchall()
-            # Commit data manipulation to database
-            self.connector.commit()
-            self.cursor.close()
-            return result
+            result = None
+            if customer_id is not -1:  # Retrieves specified boat
+                # SQL to retrieve services
+                sql = "SELECT * FROM slip WHERE customer_id = %s"
+                # Execute SQL
+                self.cursor.execute(sql, (customer_id,))
+                result = self.cursor.fetchall()
+                # Make sure data is committed to the database
+                self.connector.commit()
+                self.cursor.close()
+            else:  # Retrieves all the services
+                sql = "SELECT * FROM slip"
+                # Execute
+                self.cursor.execute(sql)
+                result = self.cursor.fetchall()
+                # Make sure data is committed to the database
+                self.connector.commit()
+                self.cursor.close()
+        return result
 
     #
     #   Add boat slip
@@ -313,7 +324,6 @@ class MenuFrame(tk.Frame):
 
 #
 # ServicePage Class
-# Not implemented
 #
 class ServicePage(tk.Frame):
     cur_services = None
@@ -352,12 +362,41 @@ class ServicePage(tk.Frame):
 
 #
 # SlipPage Class
-# Not implemented
 #
 class SlipPage(tk.Frame):
+    cur_slips = None
+    customer_id = None
+
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        tk.Label(self, text="This is slip page").pack(side="top", fill="x", pady=10)
+
+        # Customer ID to add service to
+        tk.Label(self, text="Customer ID: ").grid(row=1, column=0, sticky="w")
+        self.customer_id = tk.Entry(self, width=10)
+        self.customer_id.grid(row=1, column=1)
+
+        # clear button
+        tk.Button(self, text="Clear", padx=20,
+                  command=lambda: self.clear_lookup_entry()).grid(row=2, column=0)
+        # search button
+        self.bind("<Return>",
+                  (lambda event: self.update_search_panel(self.customer_id.get())))
+
+        tk.Button(self, text="Search", padx=20,
+                  command=lambda: self.update_search_panel(self.customer_id.get())).grid(row=2, column=1)
+
+        # initially show all customers
+        self.update_search_panel(-1)
+
+    def update_search_panel(self, customer_id):
+        new_frame = SlipPanel(self, customer_id)
+        if self.cur_slips is not None:
+            self.cur_slips.destroy()
+        self.cur_slips = new_frame
+        self.cur_slips.grid(row=0, column=2, rowspan=30)
+
+    def clear_lookup_entry(self):
+        self.customer_id.delete(0, 'end')
 
 
 #
@@ -605,6 +644,40 @@ class ServicesPanel(tk.Frame):
                 self.result[i] = self.result[i][:5]
             s = tabulate(self.result,
                          headers=["ID", "Boat", "Start Date", "End Date", "Service Type"],
+                         tablefmt="simple")
+        except Exception as e:
+            s = e
+        return s
+
+class SlipPanel(tk.Frame):
+    s = None
+    t = None
+    result = None
+
+    def __init__(self, master, customer_id):
+        tk.Frame.__init__(self, master)
+        self.configure(bg="#e6e6e6")
+        self.s = tk.Scrollbar(self)
+        self.t = tk.Text(self, height=50, width=150, relief="sunken")
+        self.s.pack(side='right', fill='y')
+        self.t.pack(side='left', fill='y')
+        self.s.config(command=self.t.yview)
+        self.t.config(yscrollcommand=self.s.set)
+        # search database insert string into scrollbar
+        self.t.insert(tk.INSERT, self.search(customer_id))
+        self.t.configure(state='disabled')
+
+    # return string of search results
+    def search(self, customer_id):
+        s = ""
+        try:
+            db = DataBase()
+            self.result = db.get_slip(customer_id)
+            # if only one customer found display detailed view
+            for i in range(0, self.result.__len__()):
+                self.result[i] = self.result[i][:5]
+            s = tabulate(self.result,
+                         headers=["ID", "Current Lease", "Duration", "Dock ID", "Customer ID"],
                          tablefmt="simple")
         except Exception as e:
             s = e
