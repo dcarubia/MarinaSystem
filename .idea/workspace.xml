@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ed4c11f7-8320-4ec8-8b87-1f38228879d2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="885" column="38" selection-start-line="885" selection-start-column="38" selection-end-line="885" selection-end-column="38" />
+            <state relative-caret-position="228">
+              <caret line="583" column="41" selection-start-line="583" selection-start-column="41" selection-end-line="583" selection-end-column="41" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
                 <element signature="e#19061#19098#0" />
@@ -177,7 +176,14 @@
       <option name="project" value="LOCAL" />
       <updated>1557151704033</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fixed focus problem with add service popup">
+      <created>1557166837460</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1557166837460</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -222,7 +228,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added retrieve services functionality on service page.&#10;added display table to service page." />
     <MESSAGE value="added &quot;add service&quot; button to customer popup.&#10;added AddServicePopup window but needs work on functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="added &quot;add service&quot; button to customer popup.&#10;added AddServicePopup window but needs work on functionality" />
+    <MESSAGE value="fixed focus problem with add service popup" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed focus problem with add service popup" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/test.py">
@@ -240,8 +247,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="885" column="38" selection-start-line="885" selection-start-column="38" selection-end-line="885" selection-end-column="38" />
+        <state relative-caret-position="228">
+          <caret line="583" column="41" selection-start-line="583" selection-start-column="41" selection-end-line="583" selection-end-column="41" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
             <element signature="e#19061#19098#0" />

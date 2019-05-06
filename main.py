@@ -581,7 +581,7 @@ class CustomerSearchPanel(tk.Frame):
         tk.Frame.__init__(self, master)
         self.configure(bg="#e6e6e6")
         self.s = tk.Scrollbar(self)
-        self.t = tk.Text(self, height=50, width=150, relief="sunken")
+        self.t = tk.Text(self, height=40, width=150, relief="sunken")
         self.s.pack(side='right', fill='y')
         self.t.pack(side='left', fill='y')
         self.s.config(command=self.t.yview)
