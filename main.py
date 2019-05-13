@@ -5,6 +5,7 @@ from tkinter import messagebox
 import mysql.connector
 from mysql.connector import errorcode
 from tabulate import tabulate
+import random
 
 
 # DataBase Class will handle all interactions with the database
@@ -98,6 +99,7 @@ class DataBase:
             self.connector.commit()
             self.cursor.close()
 
+
     #
     #   @param: id: customer_id to delete
     #
@@ -180,8 +182,8 @@ class DataBase:
         else:
             # SQL to add slip
             add_slip = ("INSERT INTO slip "
-                        "(current_lease, max_length, dock_id, customer_id) "
-                        "VALUES (%s, %s, %d, %d)")
+                        "(current_lease, duration, dock_id, customer_id) "
+                        "VALUES (%s, %s, %s, %s)")
             # Execute - Insert new slip
             self.cursor.execute(add_slip, data)
             # Make sure data is committed to the database
@@ -781,9 +783,9 @@ class CustomerDetailPopup(tk.Toplevel):
         self.close_button = tk.Button(box, text="Close", width=10, command=self.cancel)
         self.close_button.pack(side=tk.LEFT, padx=5, pady=5)
         self.service_button = tk.Button(self, text="Add Service", padx=20,
-                                        command=lambda: self.add_service())
+                                        command=lambda: self.add_service(self.customer[0][0]))
         self.rental_button = tk.Button(self, text="Add Rental", padx=20,
-                                       command=lambda: self.add_rental())
+                                       command=lambda: self.add_rental(self.customer[0][0]))
         self.service_button.pack(side=tk.BOTTOM, padx=5, pady=5)
         self.rental_button.pack(side=tk.BOTTOM, padx=5, pady=5)
         self.bind("<Return>", self.cancel)
@@ -856,26 +858,25 @@ class CustomerDetailPopup(tk.Toplevel):
     def add_service(self):
         AddServicePopup(self.parent, self.result)
 
-    def add_rental(self):
-        AddRentalPopup(self.parent, self.result)
+    def add_rental(self, id):
+        AddRentalPopup(self.parent, id)
 
 
 class AddRentalPopup(tk.Toplevel):
-    end_date = None
-    start_date = None
-    end_date = None
+    lease_price = None
+    duration = None
     boat_length = None
     apply_button = None
     edit_button = None
     close_button = None
 
-    def __init__(self, parent, result, title="Add Rental"):
+    def __init__(self, parent, id, title="Add Rental"):
         self.top = tk.Toplevel.__init__(self, parent)
         self.transient(parent)
         if title:
             self.title(title)
         self.parent = parent
-        self.result = None
+        self.id = id
         body = tk.Frame(self)
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
@@ -893,16 +894,16 @@ class AddRentalPopup(tk.Toplevel):
     # construction hooks
     def body(self, master):
         tk.Label(master, text="Boat Length (ft): ").grid(row=1, sticky="e")
-        tk.Label(master, text="Start Date (mm/dd/yy): ").grid(row=2, sticky="e")
-        tk.Label(master, text="End Date (mm/dd/yy): ").grid(row=3, sticky="e")
+        tk.Label(master, text="Duration of Rental: ").grid(row=2, sticky="e")
+        tk.Label(master, text="Lease Price (per month): ").grid(row=3, sticky="e")
 
-        self.end_date = tk.Entry(master, width=15)
         self.boat_length = tk.Entry(master, width=15)
-        self.start_date = tk.Entry(master, width=15)
+        self.duration = tk.Entry(master, width=15)
+        self.lease_price = tk.Entry(master, width=15)
 
-        self.end_date.grid(row=3, column=1)
-        self.start_date.grid(row=2, column=1)
+        self.duration.grid(row=2, column=1)
         self.boat_length.grid(row=1, column=1)
+        self.lease_price.grid(row=3, column=1)
 
         return self.boat_length  # initial focus
 
@@ -943,42 +944,24 @@ class AddRentalPopup(tk.Toplevel):
         return 1  # override
 
     def apply(self):
-        '''
         usr_entry = (
-            self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
-            self.state.get(),
-            self.customer[0][0])
+            self.lease_price.get(), self.duration.get(), random.randint(1, 15), self.id)
         try:
             db = DataBase()
-            db.update_customer(usr_entry)
+            db.add_slip(usr_entry)
         except:
             pass
-        '''
         self.parent.focus_set()
         self.destroy()
 
     def enable_entries(self):
-        self.end_date.configure(state="normal")
+        self.lease_price.configure(state="normal")
         self.boat_length.configure(state="normal")
         self.apply_button.configure(state="normal")
         self.bind("<Return>", self.ok)
         self.edit_button.configure(state=tk.DISABLED)
 
-    def delete_customer(self):
-        # confirm removal
-        '''
-        msg_box = tk.messagebox.askquestion("Confirm Removal",
-                                            "Are you sure you want to remove this customer? \n\nThis action cannot be undone.\n",
-                                            icon='warning')
-        if msg_box == 'yes':
-            try:
-                db = DataBase()
-                db.remove_customer(self.customer[0][0])
-            except:
-                pass
-            self.cancel()
-        '''
-        return
+
 
 class AddServicePopup(tk.Toplevel):
     boat_id = None
