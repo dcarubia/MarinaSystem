@@ -260,7 +260,7 @@ class MainWindow(tk.Tk):
         self.winfo_toplevel().title("Finger Lakes Marinas System")
         # add menu bar to left side
         self.menu_frame = MenuFrame(self)
-        self.menu_frame.pack(side="top")
+        self.menu_frame.pack(side="top", fill="both")
 
         # load customer page
         self.switch_main_frame(CustomerPage)
@@ -292,7 +292,7 @@ class MenuFrame(tk.Frame):
 
     def __init__(self, master):
         x_pad = 30
-        y_pad = 10
+        y_pad = 7
 
         tk.Frame.__init__(self, master)
         self.slip_button = tk.Button(self, text="Slip Rentals", padx=x_pad, pady=y_pad,
@@ -302,11 +302,12 @@ class MenuFrame(tk.Frame):
         self.customer_button = tk.Button(self, text="  Customer  ", padx=x_pad, pady=y_pad,
                                          command=lambda: master.switch_main_frame(CustomerPage))
 
-        self.customer_button.pack(side="left")
-        self.slip_button.pack(side="left")
-        self.service_button.pack(side="left")
+        self.customer_button.pack(side="left", padx=10, pady=7)
+        self.slip_button.pack(side="left", padx=10)
+        self.service_button.pack(side="left", padx=10)
 
         self.activate()
+        self.configure(bg="#cccccc")
 
     def activate(self):
         self.disable()
@@ -559,8 +560,8 @@ class AddCustomerPopup(tk.Toplevel):
             try:
                 db = DataBase()
                 customer_data = (
-                self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
-                self.state.get())
+                    self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
+                    self.state.get())
                 db.add_customer(customer_data)
             except:
                 pass
@@ -702,6 +703,7 @@ class CustomerDetailPopup(tk.Toplevel):
     city = None
     state = None
     service_button = None
+    rental_button = None
     apply_button = None
     edit_button = None
     close_button = None
@@ -780,7 +782,10 @@ class CustomerDetailPopup(tk.Toplevel):
         self.close_button.pack(side=tk.LEFT, padx=5, pady=5)
         self.service_button = tk.Button(self, text="Add Service", padx=20,
                                         command=lambda: self.add_service())
+        self.rental_button = tk.Button(self, text="Add Rental", padx=20,
+                                       command=lambda: self.add_rental())
         self.service_button.pack(side=tk.BOTTOM, padx=5, pady=5)
+        self.rental_button.pack(side=tk.BOTTOM, padx=5, pady=5)
         self.bind("<Return>", self.cancel)
         self.bind("<Escape>", self.cancel)
         box.pack()
@@ -851,6 +856,126 @@ class CustomerDetailPopup(tk.Toplevel):
     def add_service(self):
         AddServicePopup(self.parent, self.result)
 
+    def add_rental(self):
+        AddRentalPopup(self.parent, self.result)
+
+
+class AddRentalPopup(tk.Toplevel):
+    boat_id = None
+    start_date = None
+    end_date = None
+    service = None
+    apply_button = None
+    edit_button = None
+    close_button = None
+
+    def __init__(self, parent, result, title="Add Rental"):
+        self.top = tk.Toplevel.__init__(self, parent)
+        self.transient(parent)
+        if title:
+            self.title(title)
+        self.parent = parent
+        self.result = None
+        body = tk.Frame(self)
+        self.initial_focus = self.body(body)
+        body.pack(padx=5, pady=5)
+        self.buttonbox()
+        self.grab_set()
+        if not self.initial_focus:
+            self.initial_focus = self
+        self.protocol("WM_DELETE_WINDOW", self.cancel)
+        self.geometry("+%d+%d" % (parent.winfo_rootx() + 500,
+                                  parent.winfo_rooty() + 500))
+        self.initial_focus.focus_set()
+        self.wait_window(self)
+
+    #
+    # construction hooks
+    def body(self, master):
+        tk.Label(master, text="Boat ID: ").grid(row=1, sticky="e")
+        tk.Label(master, text="Services Requested: ").grid(row=2, sticky="e")
+
+        self.boat_id = tk.Entry(master, width=15)
+        self.service = tk.Entry(master, width=15)
+
+        self.boat_id.grid(row=1, column=1)
+        self.service.grid(row=2, column=1)
+
+        return self.boat_id  # initial focus
+
+    # def disable_entries(self):
+    #     self.boat_id.configure(state="disabled")
+    #     self.service.configure(state="disabled")
+
+    def buttonbox(self):
+        # add button box
+        box = tk.Frame(self)
+        w = tk.Button(box, text="Apply Changes", width=15, command=self.ok, state=tk.ACTIVE)
+        w.pack(side=tk.LEFT, padx=5, pady=5)
+        w = tk.Button(box, text="Close", width=10, command=self.cancel)
+        w.pack(side=tk.LEFT, padx=5, pady=5)
+        self.bind("<Return>", self.ok)
+        self.bind("<Escape>", self.cancel)
+        box.pack()
+
+    #
+    # standard button semantics
+    def ok(self, event=None):
+        if not self.validate():
+            self.initial_focus.focus_set()  # put focus back
+            return
+        self.withdraw()
+        self.update_idletasks()
+        self.apply()
+        self.cancel()
+
+    def cancel(self, event=None):
+        # put focus back to the parent window
+        self.parent.focus_set()
+        self.destroy()
+
+    #
+    # command hooks
+    def validate(self):
+        return 1  # override
+
+    def apply(self):
+        '''
+        usr_entry = (
+            self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
+            self.state.get(),
+            self.customer[0][0])
+        try:
+            db = DataBase()
+            db.update_customer(usr_entry)
+        except:
+            pass
+        '''
+        self.parent.focus_set()
+        self.destroy()
+
+    def enable_entries(self):
+        self.boat_id.configure(state="normal")
+        self.service.configure(state="normal")
+        self.apply_button.configure(state="normal")
+        self.bind("<Return>", self.ok)
+        self.edit_button.configure(state=tk.DISABLED)
+
+    def delete_customer(self):
+        # confirm removal
+        '''
+        msg_box = tk.messagebox.askquestion("Confirm Removal",
+                                            "Are you sure you want to remove this customer? \n\nThis action cannot be undone.\n",
+                                            icon='warning')
+        if msg_box == 'yes':
+            try:
+                db = DataBase()
+                db.remove_customer(self.customer[0][0])
+            except:
+                pass
+            self.cancel()
+        '''
+        return
 
 class AddServicePopup(tk.Toplevel):
     boat_id = None
@@ -932,6 +1057,7 @@ class AddServicePopup(tk.Toplevel):
         return 1  # override
 
     def apply(self):
+        '''
         usr_entry = (
             self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
             self.state.get(),
@@ -941,6 +1067,7 @@ class AddServicePopup(tk.Toplevel):
             db.update_customer(usr_entry)
         except:
             pass
+        '''
         self.parent.focus_set()
         self.destroy()
 
@@ -953,6 +1080,7 @@ class AddServicePopup(tk.Toplevel):
 
     def delete_customer(self):
         # confirm removal
+        '''
         msg_box = tk.messagebox.askquestion("Confirm Removal",
                                             "Are you sure you want to remove this customer? \n\nThis action cannot be undone.\n",
                                             icon='warning')
@@ -963,6 +1091,8 @@ class AddServicePopup(tk.Toplevel):
             except:
                 pass
             self.cancel()
+        '''
+        return
 
 
 if __name__ == "__main__":
