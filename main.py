@@ -861,10 +861,10 @@ class CustomerDetailPopup(tk.Toplevel):
 
 
 class AddRentalPopup(tk.Toplevel):
-    boat_id = None
+    end_date = None
     start_date = None
     end_date = None
-    service = None
+    boat_length = None
     apply_button = None
     edit_button = None
     close_button = None
@@ -892,16 +892,19 @@ class AddRentalPopup(tk.Toplevel):
     #
     # construction hooks
     def body(self, master):
-        tk.Label(master, text="Boat ID: ").grid(row=1, sticky="e")
-        tk.Label(master, text="Services Requested: ").grid(row=2, sticky="e")
+        tk.Label(master, text="Boat Length (ft): ").grid(row=1, sticky="e")
+        tk.Label(master, text="Start Date (mm/dd/yy): ").grid(row=2, sticky="e")
+        tk.Label(master, text="End Date (mm/dd/yy): ").grid(row=3, sticky="e")
 
-        self.boat_id = tk.Entry(master, width=15)
-        self.service = tk.Entry(master, width=15)
+        self.end_date = tk.Entry(master, width=15)
+        self.boat_length = tk.Entry(master, width=15)
+        self.start_date = tk.Entry(master, width=15)
 
-        self.boat_id.grid(row=1, column=1)
-        self.service.grid(row=2, column=1)
+        self.end_date.grid(row=3, column=1)
+        self.start_date.grid(row=2, column=1)
+        self.boat_length.grid(row=1, column=1)
 
-        return self.boat_id  # initial focus
+        return self.boat_length  # initial focus
 
     # def disable_entries(self):
     #     self.boat_id.configure(state="disabled")
@@ -955,8 +958,8 @@ class AddRentalPopup(tk.Toplevel):
         self.destroy()
 
     def enable_entries(self):
-        self.boat_id.configure(state="normal")
-        self.service.configure(state="normal")
+        self.end_date.configure(state="normal")
+        self.boat_length.configure(state="normal")
         self.apply_button.configure(state="normal")
         self.bind("<Return>", self.ok)
         self.edit_button.configure(state=tk.DISABLED)
@@ -1010,7 +1013,7 @@ class AddServicePopup(tk.Toplevel):
     # construction hooks
     def body(self, master):
         tk.Label(master, text="Boat ID: ").grid(row=1, sticky="e")
-        tk.Label(master, text="Services Requested: ").grid(row=2, sticky="e")
+        tk.Label(master, text="Requested Services: ").grid(row=2, sticky="e")
 
         self.boat_id = tk.Entry(master, width=15)
         self.service = tk.Entry(master, width=15)
