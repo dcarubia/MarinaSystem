@@ -151,7 +151,7 @@ class DataBase:
             raise e
         else:
             result = None
-            if customer_id is not -1:  # Retrieves specified boat
+            if customer_id is not "":  # Retrieves specified boat
                 # SQL to retrieve services
                 sql = "SELECT * FROM slip WHERE customer_id = %s"
                 # Execute SQL
@@ -203,7 +203,8 @@ class DataBase:
         else:
             # SQL to add service
             add_service = ("INSERT INTO service "
-                           "(boat_id, service")
+                           "(boat_id, service, customer) "
+                           "VALUES (%s, %s, %s)")
             # Execute SQL
             self.cursor.execute(add_service, data)
             # Make sure data is committed to the database
@@ -222,9 +223,9 @@ class DataBase:
             raise e
         else:
             result = None
-            if boat_id is not -1:  # Retrieves specified boat
+            if boat_id is not "":  # Retrieves specified boat
                 # SQL to retrieve services
-                sql = "SELECT * FROM service WHERE boat_id = %s"
+                sql = "SELECT * FROM service WHERE customer = %s"
                 # Execute SQL
                 self.cursor.execute(sql, (boat_id,))
                 result = self.cursor.fetchall()
@@ -337,7 +338,7 @@ class ServicePage(tk.Frame):
         tk.Frame.__init__(self, master)
 
         # Customer ID to add service to
-        tk.Label(self, text="Boat ID: ").grid(row=1, column=0, sticky="w")
+        tk.Label(self, text="Customer ID: ").grid(row=1, column=0, sticky="w")
         self.boat_id = tk.Entry(self, width=10)
         self.boat_id.grid(row=1, column=1)
 
@@ -352,7 +353,7 @@ class ServicePage(tk.Frame):
                   command=lambda: self.update_search_panel(self.boat_id.get())).grid(row=2, column=1)
 
         # initially show all customers
-        self.update_search_panel(-1)
+        self.update_search_panel("")
 
     def update_search_panel(self, boat_id):
         new_frame = ServicesPanel(self, boat_id)
@@ -391,7 +392,7 @@ class SlipPage(tk.Frame):
                   command=lambda: self.update_search_panel(self.customer_id.get())).grid(row=2, column=1)
 
         # initially show all customers
-        self.update_search_panel(-1)
+        self.update_search_panel("")
 
     def update_search_panel(self, customer_id):
         new_frame = SlipPanel(self, customer_id)
@@ -648,9 +649,9 @@ class ServicesPanel(tk.Frame):
             self.result = db.get_services(boat_id)
             # if only one customer found display detailed view
             for i in range(0, self.result.__len__()):
-                self.result[i] = self.result[i][:5]
+                self.result[i] = self.result[i][:6]
             s = tabulate(self.result,
-                         headers=["ID", "Boat", "Start Date", "End Date", "Service Type"],
+                         headers=["ID", "Boat", "Start Date", "End Date", "Service Type", "Customer ID"],
                          tablefmt="simple")
         except Exception as e:
             s = e
@@ -855,8 +856,8 @@ class CustomerDetailPopup(tk.Toplevel):
                 pass
             self.cancel()
 
-    def add_service(self):
-        AddServicePopup(self.parent, self.result)
+    def add_service(self, id):
+        AddServicePopup(self.parent, id)
 
     def add_rental(self, id):
         AddRentalPopup(self.parent, id)
@@ -972,13 +973,13 @@ class AddServicePopup(tk.Toplevel):
     edit_button = None
     close_button = None
 
-    def __init__(self, parent, result, title="Add Service"):
+    def __init__(self, parent, id, title="Add Service"):
         self.top = tk.Toplevel.__init__(self, parent)
         self.transient(parent)
         if title:
             self.title(title)
         self.parent = parent
-        self.result = None
+        self.id = id
         body = tk.Frame(self)
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
@@ -996,7 +997,7 @@ class AddServicePopup(tk.Toplevel):
     # construction hooks
     def body(self, master):
         tk.Label(master, text="Boat ID: ").grid(row=1, sticky="e")
-        tk.Label(master, text="Requested Services: ").grid(row=2, sticky="e")
+        tk.Label(master, text="Service Type: ").grid(row=2, sticky="e")
 
         self.boat_id = tk.Entry(master, width=15)
         self.service = tk.Entry(master, width=15)
@@ -1043,17 +1044,14 @@ class AddServicePopup(tk.Toplevel):
         return 1  # override
 
     def apply(self):
-        '''
+
         usr_entry = (
-            self.f_name.get(), self.l_name.get(), self.phone.get(), self.street.get(), self.city.get(),
-            self.state.get(),
-            self.customer[0][0])
+            self.boat_id.get(), self.service.get(), self.id)
         try:
             db = DataBase()
-            db.update_customer(usr_entry)
+            db.add_service(usr_entry)
         except:
             pass
-        '''
         self.parent.focus_set()
         self.destroy()
 
@@ -1064,21 +1062,7 @@ class AddServicePopup(tk.Toplevel):
         self.bind("<Return>", self.ok)
         self.edit_button.configure(state=tk.DISABLED)
 
-    def delete_customer(self):
-        # confirm removal
-        '''
-        msg_box = tk.messagebox.askquestion("Confirm Removal",
-                                            "Are you sure you want to remove this customer? \n\nThis action cannot be undone.\n",
-                                            icon='warning')
-        if msg_box == 'yes':
-            try:
-                db = DataBase()
-                db.remove_customer(self.customer[0][0])
-            except:
-                pass
-            self.cancel()
-        '''
-        return
+
 
 
 if __name__ == "__main__":
